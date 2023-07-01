@@ -8,9 +8,40 @@
 </head>
 
 <body>
+    <button id="btn" class="rock"> Rock </button>
+    <button id="btn" class="paper"> Paper </button>
+    <button id="btn" class="scissors"> Scissors </button>
+
+    <div id="main">
+
+    </div>
 
 </body>
 <script>
+    let result = "";
+    let userScore = 0;
+    let computerScore = 0;
+
+
+    const div = document.createElement('div');
+    div.classList.add('main');
+    main.appendChild(div);
+    const head1 = document.createElement('p');
+    const aNode = document.createTextNode(result);
+    head1.appendChild(aNode);
+
+    const head2 = document.createElement('p');
+    const totalScore = document.createTextNode(`Compter Score is: ${computerScore} and your score is ${userScore}`);
+    head2.appendChild(totalScore);
+
+    div.appendChild(head1);
+    div.appendChild(head2);
+
+
+    const userSelection = document.querySelectorAll('#btn');
+    userSelection.forEach(selection => selection.addEventListener('click', setUserSelection));
+
+
 
     function getComputerChoice() {
         /*Create an array of possible computer choices*/
@@ -23,65 +54,90 @@
 
     }
 
-    getComputerChoice();
+
+    function setUserSelection(e) {
+
+        //gets the result string
+        //plays round with the button that the user selected and gets the computer choice
+        result = playRound(this.classList.value, getComputerChoice());
+        aNode.data = result;
+    }
+
+    function updateScoreboard(winner) {
+        if (userScore === 5) {
+            aNode.data = "You are the winner of the game! Please refresh to play again!";
+            userSelection.forEach(selection => selection.removeEventListener('click'));
+            return;
+        } else if (computerScore === 5) {
+            aNode.data = "The computer has won 5 rounds. You lost. Please refresh the page to play again";
+            userSelection.forEach(selection => selection.removeEventListener('click'));
+            return;
+        }
+        if (winner === "user") {
+            totalScore.data = `Compter Score is: ${computerScore} and your score is ${++userScore}`;
+            return userScore;
+
+
+        } else if (winner === "computer") {
+            totalScore.data = `Compter Score is: ${++computerScore} and your score is ${userScore}`;
+            return computerScore;
+        } else {
+            totalScore.data = `Compter Score is: ${computerScore} and your score is ${userScore}`;
+            return computerScore;
+
+        }
+    }
+
+
     function playRound(playerSelection, computerSelection) {
+        let winningString = '';
         if (playerSelection == "rock") {
             if (computerSelection == "rock") {
-                return "Tie! Both chose rock";
+                winningString = "This round is a tie! Both chose rock";
 
             } else if (computerSelection == "paper") {
-                return "You lose! Paper beats your rock";
+                updateScoreboard("computer");
+                winningString = "You lose this round! Paper beats your rock";
 
             } else if (computerSelection == "scissors") {
-                return "You win! Your rock beats their scissors"
+                updateScoreboard("user");
+                winningString = "You win this round! Your rock beats their scissors"
 
             }
 
         } else if (playerSelection == "paper") {
             if (computerSelection == "rock") {
-                return "You win! Your paper beats their rock"
+                updateScoreboard("user");
+                winningString = "You win this round! Your paper beats their rock"
 
             } else if (computerSelection == "paper") {
-                return "Tie! Both chose paper";
+                updateScoreboard();
+                winningString = "This round is a tie! Both chose paper";
 
             } else if (computerSelection == "scissors") {
-                return "You lose! Scissors beats your paper";
+                updateScoreboard("computer");
+                winningString = "You lose this round! Scissors beats your paper";
 
             }
 
         } else if (playerSelection == "scissors") {
             if (computerSelection == "rock") {
-                return "You lose! Rock beats your scissors";
+                updateScoreboard("computer");
+                winningString = "You lose this round! Rock beats your scissors";
 
             } else if (computerSelection == "paper") {
-                return "You win! Yoir scissors cuts their paper"
+                updateScoreboard("user");
+                winningString = "You win this round! Yoir scissors cuts their paper"
 
             } else if (computerSelection == "scissors") {
-                return "Tie! Both chose scissors";
+                updateScoreboard();
+                winningString = "This round is a tie! Both chose scissors";
 
             }
 
         }
+        return winningString;
     }
-
-    function game() {
-        for (let i = 1; i <= 5; i++) {
-            let userSelection = prompt("Choose rock, paper or scissors: ");
-            const playerSelection = userSelection.toLowerCase();
-            const computerSelection = getComputerChoice();
-            // console.log("The compters choice is " + computerSelection + " and YOUR selection is " + playerSelection)
-            console.log(playRound(playerSelection, computerSelection));
-            console.log(i);
-
-        }
-
-    }
-    game();
-
-
-
-
-
 
 
 </script>
